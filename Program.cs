@@ -1,10 +1,10 @@
-﻿namespace Algorithm
+namespace Algorithm
 {
-    class PriorityQueue
+    class PriorityQueue<T> where T : IComparable<T>
     {
-        List<int> _heap = new List<int>();
+        List<T> _heap = new List<T>();
 
-        public void Push(int data)
+        public void Push(T data)
         {
             _heap.Add(data);
 
@@ -13,10 +13,10 @@
             while (now > 0)
             {
                 int next = (now - 1) / 2;
-                if (_heap[now] < _heap[next])
+                if (_heap[now].CompareTo(_heap[next]) < 0)
                     break;
 
-                int temp = _heap[now];
+                T temp = _heap[now];
                 _heap[now] = _heap[next];
                 _heap[next] = temp;
 
@@ -24,9 +24,9 @@
             }
         }
 
-        public int Pop()
+        public T Pop()
         {
-            int ret = _heap[0];
+            T ret = _heap[0];
 
             int lastIndex = _heap.Count - 1;
             _heap[0] = _heap[lastIndex];
@@ -41,16 +41,16 @@
 
                 int next = now;
 
-                if (left <= lastIndex && _heap[next] < _heap[left])
+                if (left <= lastIndex && _heap[next].CompareTo(_heap[left]) < 0)
                     next = left;
 
-                if (right <= lastIndex && _heap[next] < _heap[right])
+                if (right <= lastIndex && _heap[next].CompareTo(_heap[right]) < 0)
                     next = right;
 
                 if (next == now)
                     break;
 
-                int temp = _heap[now];
+                T temp = _heap[now];
                 _heap[now] = _heap[next];
                 _heap[next] = temp;
 
@@ -66,20 +66,34 @@
         }
     }
 
+    class Knight : IComparable<Knight>
+    {
+        public int Id { get; set; }
+
+        public int CompareTo(Knight? other)
+        {
+            if (other == null)
+                return 1;
+            if (Id == other.Id)
+                return 0;
+            return Id > other.Id ? 1 : -1;
+        }
+    }
+
     public class Program
     {
         static void Main(String[] args)
         {
-            PriorityQueue q = new PriorityQueue();
-            q.Push(20);
-            q.Push(10);
-            q.Push(30);
-            q.Push(90);
-            q.Push(40);
+            PriorityQueue<Knight> q = new PriorityQueue<Knight>();
+            q.Push(new Knight() { Id = 20 });
+            q.Push(new Knight() { Id = 10 });
+            q.Push(new Knight() { Id = 30 });
+            q.Push(new Knight() { Id = 90 });
+            q.Push(new Knight() { Id = 40 });
 
-            while(q.Count() > 0)
+            while (q.Count() > 0)
             {
-                Console.WriteLine(q.Pop());
+                Console.WriteLine(q.Pop().Id);
             }
         }
     }
